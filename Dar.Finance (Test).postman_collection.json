@@ -1,0 +1,383 @@
+{
+	"info": {
+		"_postman_id": "9bb77420-ad7d-4f2b-a838-c5c2c7a1ce78",
+		"name": "Dar.Finance (Test)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Common (Auth & User)",
+			"item": [
+				{
+					"name": "auth.sendCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonRes = JSON.parse(responseBody);\r",
+									"var jsonReq = JSON.parse(pm.request.body);\r",
+									"\r",
+									"pm.globals.set(\"code\", jsonRes.response.code);\r",
+									"pm.globals.set(\"phone\", jsonReq.phone);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"79000000000\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth.sendCode",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth.sendCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth.confirmCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonRes = JSON.parse(responseBody);\r",
+									"\r",
+									"pm.globals.set(\"token\", jsonRes.response.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"{{phone}}\",\r\n    \"code\": \"{{code}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth.confirmCode",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth.confirmCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth.logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}/auth.logout",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth.logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": {{user_id}},\r\n    \"phone\": {{phone}}\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/user.get?user_id={{user_id}}&phone={{phone}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user.get"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}"
+								},
+								{
+									"key": "phone",
+									"value": "{{phone}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": {{user_id}},\r\n    \"first_name\": \"Loney\",\r\n    \"middle_name\": \"Sidney\",\r\n    \"last_name\": \"Sorowski\",\r\n    \"email\": \"pod@kol.ol\",\r\n    \"phone\": \"79000000001\"\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/user.update",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"user.update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notifications.get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/notifications.get?user_id=1&only_unviewed=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications.get"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "1"
+								},
+								{
+									"key": "only_unviewed",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notifications.read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "v",
+								"value": "{{v}}",
+								"type": "text"
+							},
+							{
+								"key": "project",
+								"value": "{{project}}",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": {{user_id}}\r\n}"
+						},
+						"url": {
+							"raw": "{{host}}/notifications.read",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"notifications.read"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost/api"
+		},
+		{
+			"key": "v",
+			"value": "1"
+		},
+		{
+			"key": "project",
+			"value": "copybro"
+		},
+		{
+			"key": "code",
+			"value": "232639"
+		},
+		{
+			"key": "phone",
+			"value": "79000000000"
+		},
+		{
+			"key": "token",
+			"value": "8b11b140e6645930ac01dfc2ca6ff2333a2f814e"
+		},
+		{
+			"key": "user_id",
+			"value": "1"
+		}
+	]
+}
