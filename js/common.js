@@ -4,8 +4,7 @@ var common = {
 
     init: function() {
         //elements to animate
-        // const logo = document.getElementsByClassName('logo_wrapper')[0];
-        const logo = gc('logo_wrapper', document)[0]
+        const logo = gc('logo_wrapper')[0]
         const guy = gc('guy')[0];
         const card_coin = gc('card card_coin')[0];
         const card_clocks = gc('card card_clocks')[0];
@@ -16,26 +15,26 @@ var common = {
         const hourglass = gc('hourglass')[0];
         const lupa = gc('lupa')[0];
         //animating elements on contentloaded
-        fadeIn(logo);
-        fadeIn(button_play);
-        fadeIn(button_store);
-        fadeIn(button_install);
-        fadeIn(guy);
-        fadeIn(card_coin);
-        fadeIn(card_clocks);
-        fadeIn(card_percent);
+        fade_in(logo);
+        fade_in(button_play);
+        fade_in(button_store);
+        fade_in(button_install);
+        fade_in(guy);
+        fade_in(card_coin);
+        fade_in(card_clocks);
+        fade_in(card_percent);
         //set animating elements on visibility
         hourglass.style.opacity = 0;
         lupa.style.opacity = 0;
         const observer = new IntersectionObserver(function(entries) {
             if(entries[0].isIntersecting === true) {
-                fadeIn(hourglass);
-                fadeIn(lupa);
+                fade_in(hourglass);
+                fade_in(lupa);
             }
         }, { threshold:[0.1]});
         observer.observe(document.querySelector('.hourglass_lupa'));
         //method for fade in animation
-        function fadeIn(element) {
+        function fade_in(element) {
             let id = null
             let opacity = 0
             element.style.opacity = opacity;

@@ -75,8 +75,8 @@ else {
     if ($path == 'owner.update') call('POST', $method, $query, "User::owner_update");
     if ($path == 'user.get') call('GET', $method, $query, "User::user_info");
     if ($path == 'user.update') call('POST', $method, $query, "User::user_update");
-    if ($path == 'notifications.get') call('GET', $method, $query, "User::notifications_get");
-    if ($path == 'notifications.read') call('POST', $method, $query, "User::notifications_read");
+    if ($path == 'notifications.get') call('GET', $method, $query, "Notification::notifications_get");
+    if ($path == 'notifications.read') call('POST', $method, $query, "Notification::notifications_read");
     // your methods here ...
     // routes (not found)
     response(error_response(1002, 'Application authorization failed: method is unavailable with service token.'));
