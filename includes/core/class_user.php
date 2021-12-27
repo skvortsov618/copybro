@@ -55,52 +55,73 @@ class User {
     }
 
     public static function user_update($data) {
-        $columns=[]; $errors=[];
-        isset($data["first_name"]) ? $columns[] = "first_name=:first_name" : $errors[] = "First name is not set";
-        isset($data["last_name"]) ? $columns[] = 'last_name=:last_name' : $errors[] = "Last name is not set";
-        isset($data["phone"]) ? $columns[] = 'phone=:phone' : $errors[] = "Phone is not set";
-        $data["phone"] = preg_replace("/\D/", "", $data["phone"]);
-        if ($data["phone"][0] != "7" || !preg_match("/^7\d{10}$/",$data["phone"])) $errors[] = "Phone format is incorrect";
-        isset($data["middle_name"]) ? $columns[] = 'middle_name=:middle_name' : null;
-        isset($data["email"]) ? $columns[] = 'email=:email' : null;
-        if (count($columns) == 0 || count($errors)>0) return "ERROR";
-        $columns = implode(",", $columns);
-        $qdata = [
-            "first_name"=>$data["first_name"],
-            "middle_name"=>$data["middle_name"],
-            "last_name"=>$data["last_name"],
-            "phone"=>$data["phone"],
-            "email"=>$data["email"],
-//            "user_id"=>$data["user_id"]
-            "user_id"=>2
-        ];
-        DB::update("UPDATE users SET ".$columns." WHERE user_id=:user_id",$qdata) or die (DB::error());
-        DB::query("INSERT INTO user_notifications (user_id, created, description, title) VALUES (".$data["user_id"].", ".time().", 'updated user info', 'userinfo update')") or die (DB::error());
-        return "Update successful";
+        //vars, validate
+        $errors=[];
+        !empty($data['user_id']) && is_numeric($data['user_id']) ? $user_id = $data['user_id'] : $errors[] = "UserID invalid";
+        !empty($data['first_name']) ? $first_name = $data['first_name'] : $errors[] = "First name is not set";
+        !empty($data['last_name']) ? $last_name = $data['last_name'] : $errors[] = "Last name is not set";
+        $phone = isset($data['phone']) ? $data['phone'] : "";
+        $phone = preg_replace("/\D/", "", $phone);
+        if (!preg_match("/^7\d{10}$/", $phone)) $errors[] = "Phone is invalid";
+        isset($data['middle_name']) ? $middle_name = $data['middle_name'] : null;
+        isset($data['email']) ? $email = strtolower($data['email']) : null;
+
+        if (count($errors)>0) die(implode(" | ", $errors));
+        //set
+        $set=[];
+        if (isset($first_name)) $set[] = "first_name='".$first_name."'";
+        if (isset($last_name))  $set[] = "last_name='".$last_name."'";
+        if (isset($middle_name))  $set[] = "middle_name='".$middle_name."'";
+        if (isset($phone))  $set[] = "phone='".$phone."'";
+        if (isset($email))  $set[] = "email='".$email."'";
+
+        if (count($set) == 0) die ("Set is empty");
+        $set = implode(",", $set);
+        //query
+        DB::query("UPDATE users SET ".$set." WHERE user_id='".$user_id."'") or die (DB::error());
+        DB::query("INSERT INTO user_notifications (user_id, created, description, title) VALUES ('".$user_id."', '".Session::$ts."', 'updated user info', 'userinfo update')") or die (DB::error());
+        //info
+        $user['user_id']=$user_id; $user['phone'] = $phone;
+        return self::user_info($user);
     }
 
     public static function notifications_get($data) {
-        $where="";
-        if (isset($data["only_unviewed"])) $where="viewed=0 AND ";
-        $where .= "user_id=".$data["user_id"];
+        //vars
+        isset($data['user_id']) && is_numeric($data['user_id']) ? $user_id = $data['user_id'] : die("user_id invalid");
+        $only_unviewed = isset($data["only_unviewed"]);
+        //where
+        $only_unviewed ? $where = "viewed='0' AND user_id='".$user_id."'" : $where = "user_id='".$user_id."'";
+        //query
         $q = DB::query("SELECT title, description, created, viewed FROM user_notifications WHERE ".$where);
-        $notifications = DB::fetch_all($q);
+        $notifications = [];
+        while ($n = DB::fetch_row($q)) {
+            $time = date("Y-m-d\TH:i:s\Z", $n['created']);
+            $notifications[] =  "TITLE: ".$n['title']." | DESCRIPTION: ".$n['description']." | DATE: ".$time." | VIEWED:".$n['viewed'];
+        }
+        //output
         return $notifications;
     }
 
     public static function notifications_read() {
-        DB::query("UPDATE user_notifications SET viewed=1 WHERE user_id=".Session::$user_id." AND viewed=0");
-        return "all read";
+        //vars
+        $user_id = Session::$user_id;
+        //query
+        DB::query("UPDATE user_notifications SET viewed=1 WHERE user_id='".$user_id."' AND viewed='0'");
+        //output
+        return self::notifications_get(["user_id"=>$user_id]);
     }
 
     // TEST
 
     public static function owner_info() {
-        // your code here ...
+        return self::user_info(["user_id"=>Session::$user_id]);
     }
 
     public static function owner_update($data = []) {
-        // your code here ...
+        //vars
+        $data['user_id'] = Session::$user_id;
+        //query, output
+        return self::user_update($data);
     }
 
 }

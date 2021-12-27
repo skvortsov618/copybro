@@ -38,8 +38,4 @@ class DB {
         return $res[2];
     }
 
-    public static function update($q, $data) {
-        return self::connect()->prepare($q)->execute($data);
-    }
-
 }
