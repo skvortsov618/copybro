@@ -15,42 +15,29 @@ var common = {
         const hourglass = gc('hourglass')[0];
         const lupa = gc('lupa')[0];
         //animating elements on contentloaded
-        fade_in(logo);
-        fade_in(button_play);
-        fade_in(button_store);
-        fade_in(button_install);
-        fade_in(guy);
-        fade_in(card_coin);
-        fade_in(card_clocks);
-        fade_in(card_percent);
+        common.fade_in(logo);
+        common.fade_in(button_play);
+        common.fade_in(button_store);
+        common.fade_in(button_install);
+        common.fade_in(guy);
+        common.fade_in(card_coin);
+        common.fade_in(card_clocks);
+        common.fade_in(card_percent);
         //set animating elements on visibility
-        hourglass.style.opacity = 0;
-        lupa.style.opacity = 0;
         const observer = new IntersectionObserver(function(entries) {
             if(entries[0].isIntersecting === true) {
-                fade_in(hourglass);
-                fade_in(lupa);
+                common.fade_in(hourglass);
+                common.fade_in(lupa);
             }
-        }, { threshold:[0.1]});
+        }, { threshold:[0.4]});
         observer.observe(document.querySelector('.hourglass_lupa'));
-        //method for fade in animation
-        function fade_in(element) {
-            let id = null
-            let opacity = 0
-            element.style.opacity = opacity;
-            clearInterval(id)
-            id = setInterval(frame,100);
-            function frame() {
-                if (opacity == 1){
-                    clearInterval(id);
-                } else {
-                    opacity += 0.2;
-                    element.style.opacity = opacity;
-                }
-            }
-        }
+    },
+    //method for animation
+    fade_in: async function(el) {
+        el.classList.add("fade_in")
     }
 
 }
 
-add_event(document, 'DOMContentLoaded', common.init);
+// add_event(document, 'DOMContentLoaded', common.init);
+add_event(window, 'load', common.init);

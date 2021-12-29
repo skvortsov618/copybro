@@ -71,13 +71,12 @@ else {
     // routes (auth)
     if ($path == 'auth.logout') call('POST', $method, NULL, 'Session::logout');
     // routes (users)
-    if ($path == 'owner.get') call('GET', $method, $query, "User::owner_info");
-    if ($path == 'owner.update') call('POST', $method, $query, "User::owner_update");
-    if ($path == 'user.get') call('GET', $method, $query, "User::user_info");
-    if ($path == 'user.update') call('POST', $method, $query, "User::user_update");
-    if ($path == 'notifications.get') call('GET', $method, $query, "Notification::notifications_get");
-    if ($path == 'notifications.read') call('POST', $method, $query, "Notification::notifications_read");
-    // your methods here ...
+    if ($path == 'owner.get') call('GET', $method, $query, 'User::owner_info');
+    if ($path == 'owner.update') call('POST', $method, $query, 'User::owner_update');
+    if ($path == 'user.get') call('GET', $method, $query, 'User::user_info');
+    if ($path == 'user.update') call('POST', $method, $query, 'User::user_update');
+    if ($path == 'notifications.get') call('GET', $method, $query, 'Notification::notifications_get');
+    if ($path == 'notifications.read') call('POST', $method, $query, 'Notification::notifications_read');
     // routes (not found)
     response(error_response(1002, 'Application authorization failed: method is unavailable with service token.'));
 }
